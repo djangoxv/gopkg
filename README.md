@@ -1,4 +1,4 @@
-  # gopkg: A Package Indexer
+## gopkg: A Package Indexer
 
   Written in the Go Programming Language as a sample project for DigitalOcean
 
