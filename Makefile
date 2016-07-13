@@ -1,5 +1,6 @@
 GO=go
 BINARY=gopkg
 
-build:
-	${GO} get github.com/djangoxv/gopkg
+install:
+	${GO} install github.com/djangoxv/gopkg
+
