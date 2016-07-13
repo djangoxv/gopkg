@@ -12,3 +12,16 @@ dependencies:
   post:
     - make install
     - docker run -d -p 8080:8080 $CIRCLE_PROJECT_REPONAME 
+
+test:
+  pre:
+    - curl -s -O http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux
+
+  post:
+    - ./do-package-tree_linux
+
+deployment:
+  main:
+    branch: master
+    commands:
+      - ./deploy.sh
