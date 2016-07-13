@@ -2,5 +2,5 @@ GO=go
 BINARY=gopkg
 
 install:
-	${GO} install github.com/djangoxv/gopkg
+	${GO} build github.com/djangoxv/${BINARY}
 

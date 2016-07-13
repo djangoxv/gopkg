@@ -1,6 +1,6 @@
 
 dependencies:
   pre:
-    - go get github.com/djangoxv/gopkg
+    - go get github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
   post:
     - make install
