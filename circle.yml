@@ -11,4 +11,4 @@ dependencies:
 
   post:
     - make install
-    - docker run -it --rm --name $CIRCLE_PROJECT_REPONAME $CIRCLE_PROJECT_REPONAME
+    - docker run -d -p 8080:8080 --rm $CIRCLE_PROJECT_REPONAME 
