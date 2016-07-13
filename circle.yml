@@ -1,6 +1,6 @@
 
 dependencies:
-  override:
+  pre:
     - go get github.com/djangoxv/gopkg
   post:
     - make build
