@@ -8,7 +8,7 @@ func TestPkgIndex(t *testing.T) {
 
         alphaPkg := PkgCreate("pkgtest")
         betaPkg := PkgCreate("pkgtest")
-        if alphaPkg != betaPkg {
+        if alphaPkg.PkgName != betaPkg.PkgName {
                 t.Error("two packages created differently")
         }
 }
