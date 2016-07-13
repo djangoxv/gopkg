@@ -1,7 +1,10 @@
+machine:
+  services:
+    - docker
 
 dependencies:
   pre:
     - go get github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
   post:
     - make install
-#    - docker run --publish 6060:8080 --name test --rm $CIRCLE_PROJECT_REPONAME
+    - docker run --publish 6060:8080 --name test-$CIRCLE_PROJECT_REPONAME --rm $CIRCLE_PROJECT_REPONAME
