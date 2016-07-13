@@ -1,8 +1,6 @@
 
 dependencies:
-  override:
-    - mkdir -p "$GOPATH/src/gopkg"
-    - rsync -azC --delete ./ "$GOPATH/src/gopkg/"
-
+  pre:
+    - go get github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
   post:
     - make build
