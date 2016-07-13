@@ -1,9 +1,11 @@
 machine:
-  pre:
-    - curl -o go.tar.gz -sL https://storage.googleapis.com/golang/go1.6.2.src.tar.gz
-    - sudo rm -rf /usr/local/go
-    - sudo tar -C /usr/local -xzf go.tar.gz
-    - sudo chmod a+w /usr/local/go/src/
+  environment:
+    IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+
+dependencies:
+  override:
+    - mkdir -p "$GOPATH/src/$IMPORT_PATH"
+    - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
 
 dependencies:
   post:
