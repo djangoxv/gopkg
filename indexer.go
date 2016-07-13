@@ -18,15 +18,7 @@ type PkgIndex struct {
     Packages []*Package
 }
 
-func (pkgindex *PkgIndex) PkgList() []string {
-   pkglist := []string{}
-   for _, p := range pkgindex.Packages {
-       pkglist = append(pkglist, p.PkgName)
-   }
-   return pkglist
-}
-
-// PkgCreate returns an empty package
+// PkgCreate returns a named, empty package
 func PkgCreate(pkgname string) *Package {
     return &Package{
         PkgName: pkgname,
@@ -35,11 +27,11 @@ func PkgCreate(pkgname string) *Package {
 }
 
 // PkgInvoke finds or creates a new package  
-func (pkgindex *PkgIndex) PkgInvoke(pkgname string, pkgdeps []string) bool {
+func (pkgindex *PkgIndex) PkgInvoke(pkgname string, pkgdeps []string) ReturnCode {
     var pkg *Package
     for _, p := range pkgindex.Packages {
         if p.PkgName == pkgname {
-            return true
+            return OK
         }
     }
 
@@ -55,29 +47,24 @@ func (pkgindex *PkgIndex) PkgInvoke(pkgname string, pkgdeps []string) bool {
             }
         }       
         pkgindex.Packages = append(pkgindex.Packages, pkg)
-        for _, p := range pkgindex.Packages {
-            if p.PkgName == pkgname {
-               logError.Println("INDEXED ", p.PkgName)
-            }
-        }
     }
 
-    return true
+    return OK
 }
 
 
 // PkgQuery returns boolean for whether the Package shows up
-func (pkgindex *PkgIndex) PkgQuery(pkgname string) bool {
-    logError.Println("QUERIED ", pkgname)
+func (pkgindex *PkgIndex) PkgQuery(pkgname string) ReturnCode {
+    logError.Println("Queried ", pkgname)
     for _, p := range pkgindex.Packages {
-        logError.Println("QUERIED ", p.PkgName)
         if p.PkgName == pkgname {
-            return true
+            return OK
         }
     }
-    return false
+    return FAIL
 }
 
+// determines position in PkgIndex
 func (pkgindex *PkgIndex) PkgRow(pkgname string) (int, bool) {
     var i int
     for i := range pkgindex.Packages {
@@ -88,30 +75,30 @@ func (pkgindex *PkgIndex) PkgRow(pkgname string) (int, bool) {
     return i, false
 }
 
+// DelPkg 
 func (pkgindex *PkgIndex) DelPkg(i int) {
     pkgindex.Packages = append(pkgindex.Packages[:i], pkgindex.Packages[i+1:]...)
     return
 }
 
-// PkgRemove removes a package from the list, returns boolean if removal is depended upon
-func (pkgindex *PkgIndex) PkgRemove(pkgname string) bool {
+// PkgRemove checks that deps are removed first
+func (pkgindex *PkgIndex) PkgRemove(pkgname string) ReturnCode {
     var exists bool
     for _,p := range pkgindex.Packages {
 
         for _, q := range p.PkgDeps {
             if q.PkgName == pkgname {
-                return false
+                return FAIL
             }
         }
     }
-    
     
     logError.Println("Removed ", pkgname)
     j, exists := pkgindex.PkgRow(pkgname)
     if exists {
         pkgindex.DelPkg(j)
     }
-    return true    
+    return OK    
 }
 
 

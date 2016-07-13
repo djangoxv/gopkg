@@ -1,4 +1,4 @@
-// gppkg/main.go
+// gopkg/main.go
 package main
 
 import (
@@ -13,15 +13,15 @@ var (
     logError *log.Logger
 )
 
-// checks for FATAL ERROR
+// checks for FATAL ERROR on startup
 func CheckError(err error) {
     if err != nil {
         logError.Fatalf("Fatal Error: %s", err.Error())
     }
 }
 
-// -logfile creates a log file
-func Init(logfile string, debug bool) {
+// the -logfile flag creates a log file
+func Init(logfile string) {
     
     // open a log file, if you can
     file, err := os.OpenFile(logfile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -29,26 +29,17 @@ func Init(logfile string, debug bool) {
         log.Fatalln("Fatal Error: ", err)
     }
     
-    if debug {
-        logError = log.New(file, "DEBUG: ", log.Ldate|log.Ltime|log.Llongfile)
-    } else {
-        logError = log.New(file, "INFO: ", log.Ldate|log.Ltime)
-    }
-
-    
-
+    logError = log.New(file, "INFO: ", log.Ldate|log.Ltime)
 }
 
 func main() {
     // process flags passed from service startup
-    // count     := flag.Int("count", 100, "Maximum number of concurrent requests")
     port      := flag.String("port", "8080", "Port to bind gopkg to")
     logfile   := flag.String("logfile", "/tmp/gopkg.log", "Log file path and name")
-    debug     := flag.Bool("debug", false, "Log verbosity level for debugging gopkg")
     flag.Parse()
 
     // begin logging
-    Init(*logfile, *debug)
+    Init(*logfile)
 
     // binds to port
     tcpAddr, err := net.ResolveTCPAddr("tcp4", ":" + *port)
@@ -58,7 +49,7 @@ func main() {
     listener, err := net.ListenTCP("tcp", tcpAddr)
     CheckError(err)
 
-    // starts a concurrent handler
+    // starts a shared struct
     pkgindexer := &PkgIndex{}
     
     for {
@@ -66,6 +57,7 @@ func main() {
         if err != nil {
             continue
         }
+        // concurrency
         go PkgHandler(cx, pkgindexer)
     }
 }
