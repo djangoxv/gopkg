@@ -7,7 +7,7 @@ dependencies:
     - go get github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
 
   override:
-    - docker build -t $CIRCLE_PROJECT_REPONAME
+    - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
     - make install
