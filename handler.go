@@ -15,23 +15,32 @@ const (
         ERROR = "ERROR"
 )
 
-func ParseRequest(msg string) ReturnCode {
+
+func ParseRequest(msg string, pkgindexer *PkgIndex) ReturnCode {
+    
     valid := regexp.MustCompile(`(^INDEX|REMOVE|QUERY)\|[A-Za-z0-9-_\+]+\|(\s|[A-Za-z0-9-_+,]+)`)
-
-    logError.Printf("MATCHED= %s MESSAGE= %s ", valid.MatchString(msg), msg )
-
     if valid.MatchString(msg) {
         r := regexp.MustCompile(`\|`).Split(msg, -1)
-        action, pkgname, pkgdeps := r[0], r[1], r[3]
-        // logError.Printf("%s PKG=%s DEPS=%s", action, pkgname, pkgdeps)
+        action, pkgname, pkgdeps := r[0], r[1], r[2]
+
         if action == "INDEX" {
-            logError.Printf("%s PKG=%s DEPS=%s", action, pkgname, pkgdeps)
-            return OK
+            deplist := regexp.MustCompile(`,`).Split(pkgdeps, -1)
+            if pkgindexer.PkgInvoke(pkgname, deplist) {
+                return OK
+            }
+            return FAIL
+            
         } else if action == "QUERY" {
-            return OK
+            if pkgindexer.PkgQuery(pkgname) {
+                return OK
+            }
+            return FAIL
+
         } else if action == "REMOVE" {
-            logError.Printf("%s PKG=%s DEPS=%s", action, pkgname, pkgdeps)
-            return OK
+            if pkgindexer.PkgRemove(pkgname) {
+                return OK
+            }
+            return FAIL
         } else {
             return ERROR
         }
@@ -40,8 +49,8 @@ func ParseRequest(msg string) ReturnCode {
     }
 }
 
-func PackageRequestHandler(cx net.Conn) {
-    cx.SetReadDeadline(time.Now().Add(time.Second * 10)) // 10 second timeout
+func PkgHandler(cx net.Conn, pkgindexer *PkgIndex) {
+    cx.SetReadDeadline(time.Now().Add(time.Second * 20)) // 20 second timeout
     defer cx.Close() // close connection on exit
 
     for {
@@ -52,8 +61,8 @@ func PackageRequestHandler(cx net.Conn) {
             break
         }
 
-        responseString := ParseRequest(request)
-        logError.Println("RESPONSE: ", responseString)
+        responseString := ParseRequest(request, pkgindexer)
+        //logError.Println("RESPONSE: ", responseString)
         cx.Write([]byte(responseString + "\n"))
 
     }

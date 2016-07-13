@@ -34,6 +34,9 @@ func Init(logfile string, debug bool) {
     } else {
         logError = log.New(file, "INFO: ", log.Ldate|log.Ltime)
     }
+
+    
+
 }
 
 func main() {
@@ -56,12 +59,14 @@ func main() {
     CheckError(err)
 
     // starts a concurrent handler
+    pkgindexer := &PkgIndex{}
+    
     for {
         cx, err := listener.Accept()
         if err != nil {
             continue
         }
-        go PackageRequestHandler(cx)
+        go PkgHandler(cx, pkgindexer)
     }
 }
 
