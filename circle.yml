@@ -1,11 +1,8 @@
-machine:
-  environment:
-    IMPORT_PATH: "$CIRCLE_PROJECT_REPONAME"
 
 dependencies:
   override:
-    - mkdir -p "$GOPATH/src/$IMPORT_PATH"
-    - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
+    - mkdir -p "$GOPATH/src/gopkg"
+    - rsync -azC --delete ./ "$GOPATH/src/gopkg/"
 
   post:
     - make build
