@@ -5,6 +5,10 @@ machine:
 dependencies:
   pre:
     - go get github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+
+  override:
+    - docker build -t $CIRCLE_PROJECT_REPONAME
+
   post:
     - make install
-    - docker run --publish 6060:8080 --name test-$CIRCLE_PROJECT_REPONAME --rm $CIRCLE_PROJECT_REPONAME
+    - docker run -it --rm --name $CIRCLE_PROJECT_REPONAME $CIRCLE_PROJECT_REPONAME
