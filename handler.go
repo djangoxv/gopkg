@@ -29,7 +29,7 @@ func ParseRequest(msg string, pkgindexer *PkgIndex) ReturnCode {
                 deplist := regexp.MustCompile(`,`).Split(pkgdeps, -1) 
                 return pkgindexer.PkgInvoke(pkgname, deplist)
             case action == "QUERY":
-                return pkgindexer.PkgRemove(pkgname)
+                return pkgindexer.PkgQuery(pkgname)
             case action == "REMOVE":
                 return pkgindexer.PkgRemove(pkgname)
         }
