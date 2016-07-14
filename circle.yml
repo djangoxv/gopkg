@@ -7,6 +7,7 @@ dependencies:
     - go get github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
 
   override:
+    - go build gopkg
     - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
