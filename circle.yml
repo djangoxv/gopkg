@@ -15,7 +15,7 @@ dependencies:
 
 test:
   pre:
-    - curl -s http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux
+    - curl -O -s http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux
     - chmod +x do-package-tree_linux
 
   post:
