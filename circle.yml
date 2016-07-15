@@ -15,11 +15,11 @@ dependencies:
 
 test:
   pre:
-    - curl -O -s http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux
+    - curl http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux -o /tmp/do-package-tree_linux -s
     - chmod +x do-package-tree_linux
 
   post:
-    - ./do-package-tree_linux
+    - /tmp/do-package-tree_linux &> $CIRCLE_TEST_REPORTS/gopkg_test.out || exit 1
     - docker stop $(docker ps -a -q)
     - mv ./gopkg $CIRCLE_ARTIFACTS/
 
