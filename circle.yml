@@ -1,6 +1,6 @@
-#machine:
-#  services:
-#    - docker
+machine:
+  services:
+    - docker
 
 dependencies:
   pre:
@@ -8,11 +8,10 @@ dependencies:
 
   override:
     - go build github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
-#    - docker build -t $CIRCLE_PROJECT_REPONAME .
+    - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
-    - ./gopkg 
-#    - docker run -d -p 8080:8080 $CIRCLE_PROJECT_REPONAME 
+    - docker run -d -p 8080:8080 $CIRCLE_PROJECT_REPONAME 
 
 test:
   pre:
@@ -22,7 +21,7 @@ test:
   post:
     - /tmp/do-package-tree_linux |& tee $CIRCLE_TEST_REPORTS/gopkg_test.out
     - cat /tmp/gopkg.log |& tee $CIRCLE_TEST_REPORTS/gopkg.log
-#    - docker stop $(docker ps -a -q)
+    - docker stop $(docker ps -a -q)
     - mv ./gopkg $CIRCLE_ARTIFACTS/
 
 deployment:
