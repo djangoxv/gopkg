@@ -21,11 +21,10 @@ test:
   post:
     - $CIRCLE_ARTIFACTS/do-package-tree_linux
     - docker stop $(docker ps -a -q)
-    - docker rm $(docker ps -a -q)
     - mv ./gopkg $CIRCLE_ARTIFACTS/
 
 deployment:
   main:
     branch: master
     commands:
-      - ./deploy.sh  $CIRCLE_ARTIFACTS/gopkg
+      - ./deploy.sh gopkg
