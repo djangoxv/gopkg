@@ -27,4 +27,4 @@ deployment:
   main:
     branch: master
     commands:
-      - ./deploy.sh gopkg
+      - ./deploy.sh $CIRCLE_ARTIFACTS/gopkg
