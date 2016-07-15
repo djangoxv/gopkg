@@ -11,13 +11,13 @@ dependencies:
 #    - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
+    - ./gopkg 
 #    - docker run -d -p 8080:8080 $CIRCLE_PROJECT_REPONAME 
 
 test:
   pre:
     - curl http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux -o /tmp/do-package-tree_linux -s
     - chmod +x /tmp/do-package-tree_linux
-    - ./gopkg &
 
   post:
     - /tmp/do-package-tree_linux |& tee $CIRCLE_TEST_REPORTS/gopkg_test.out
