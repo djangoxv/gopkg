@@ -7,12 +7,11 @@ dependencies:
     - go get github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
 
   override:
-    - go build -o $CIRCLE_ARTIFACTS/gopkg github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
-    - go install github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+    - go build github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
     - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
-    - docker run -d -p 8080:8080 --env dist=$CIRCLE_ARTIFACTS $CIRCLE_PROJECT_REPONAME 
+    - docker run -d -p 8080:8080 $CIRCLE_PROJECT_REPONAME 
 
 test:
   pre:
@@ -21,6 +20,9 @@ test:
 
   post:
     - $CIRCLE_ARTIFACTS/do-package-tree_linux
+    - docker stop $(docker ps -a -q)
+    - docker rm $(docker ps -a -q)
+    - mv ./gopkg $CIRCLE_ARTIFACTS/
 
 deployment:
   main:
