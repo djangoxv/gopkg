@@ -15,8 +15,8 @@ dependencies:
 
 test:
   pre:
-    - curl -s -O $CIRCLE_ARTIFACTS/do-package-tree_linux http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux
-    - chmod +x $CIRCLE_ARTIFACTS/do-package-tree_linux
+    - curl -s http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux
+    - chmod +x do-package-tree_linux
 
   post:
     - $CIRCLE_ARTIFACTS/do-package-tree_linux
