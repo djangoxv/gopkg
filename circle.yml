@@ -8,6 +8,7 @@ dependencies:
 
   override:
     - go build -o $CIRCLE_ARTIFACTS/gopkg github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+    - go install github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
     - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
