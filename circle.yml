@@ -7,7 +7,7 @@ dependencies:
     - go get github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
 
   override:
-    - go build github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+    - go build -o $CIRCLE_ARTIFACTS/gopkg github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
     - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
@@ -15,15 +15,14 @@ dependencies:
 
 test:
   pre:
-    - curl -s -O http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux
-    - chmod +x ./do-package-tree_linux
+    - curl -s -O $CIRCLE_ARTIFACTS/do-package-tree_linux http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux
+    - chmod +x $CIRCLE_ARTIFACTS/do-package-tree_linux
 
   post:
-    - ./do-package-tree_linux
+    - $CIRCLE_ARTIFACTS/do-package-tree_linux
 
 deployment:
   main:
     branch: master
     commands:
-      - chmod +x ./deploy.sh
       - ./deploy.sh
