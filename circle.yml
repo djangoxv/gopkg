@@ -11,8 +11,7 @@ dependencies:
 #    - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
-    - ./gopkg
-      background: true
+    - nohup bash -c "./gopkg &"
 #    - docker run -d -p 8080:8080 $CIRCLE_PROJECT_REPONAME 
 
 test:
