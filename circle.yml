@@ -19,7 +19,7 @@ test:
     - chmod +x /tmp/do-package-tree_linux
 
   override:
-    - /tmp/do-package-tree_linux |& tee $CIRCLE_TEST_REPORTS/gopkg_test.out
+    - /tmp/do-package-tree_linux |& tee $CIRCLE_TEST_REPORTS/gopkg_test.out:
         parallel: true
 
   post:
