@@ -19,7 +19,7 @@ test:
     - chmod +x /tmp/do-package-tree_linux
 
   post:
-    - /tmp/do-package-tree_linux &> $CIRCLE_TEST_REPORTS/gopkg_test.out || exit 1
+    - /tmp/do-package-tree_linux |& tee $CIRCLE_TEST_REPORTS/gopkg_test.out
     - docker stop $(docker ps -a -q)
     - mv ./gopkg $CIRCLE_ARTIFACTS/
 
