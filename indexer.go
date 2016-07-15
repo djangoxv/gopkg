@@ -26,33 +26,6 @@ func PkgCreate(pkgname string) *Package {
     }
 }
 
-// PkgInvoke finds or creates a new package  
-func (pkgindex *PkgIndex) PkgInvoke(pkgname string, pkgdeps []string) ReturnCode {
-    var pkg *Package
-    for _, p := range pkgindex.Packages {
-        if p.PkgName == pkgname {
-            return OK
-        }
-    }
-
-    if pkg == nil {
-        // create empty package
-        pkg = PkgCreate(pkgname)
-        // add deps to package
-        for _, d := range pkgdeps {
-            for _, p := range pkgindex.Packages {
-                if p.PkgName == d {
-                    pkg.AddDep(p) 
-                }
-            }
-        }       
-        pkgindex.Packages = append(pkgindex.Packages, pkg)
-    }
-
-    return OK
-}
-
-
 // PkgQuery returns boolean for whether the Package shows up
 func (pkgindex *PkgIndex) PkgQuery(pkgname string) ReturnCode {
     logError.Println("Queried ", pkgname)
@@ -62,6 +35,30 @@ func (pkgindex *PkgIndex) PkgQuery(pkgname string) ReturnCode {
         }
     }
     return FAIL
+}
+
+// PkgInvoke finds or creates a new package  
+func (pkgindex *PkgIndex) PkgInvoke(pkgname string, pkgdeps []string) ReturnCode {
+    var pkg *Package
+    if pkgindex.PkgQuery(pkgname) == OK {
+        return OK
+    }
+
+    if pkg == nil {
+        // create empty package
+        pkg = PkgCreate(pkgname)
+        // add deps to package
+        for _, d := range pkgdeps {
+            for _, p := range pkgindex.Packages {
+                if p.PkgName == d {
+                    pkg.AddDep(p)
+                } 
+            }
+        }       
+        pkgindex.Packages = append(pkgindex.Packages, pkg)
+    }
+    logError.Println("Indexed, ", pkgname)
+    return OK
 }
 
 // determines position in PkgIndex
@@ -85,7 +82,6 @@ func (pkgindex *PkgIndex) DelPkg(i int) {
 func (pkgindex *PkgIndex) PkgRemove(pkgname string) ReturnCode {
     var exists bool
     for _,p := range pkgindex.Packages {
-
         for _, q := range p.PkgDeps {
             if q.PkgName == pkgname {
                 return FAIL
