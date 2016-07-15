@@ -12,7 +12,7 @@ dependencies:
     - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
-    - docker run -d -p 8080:8080 $CIRCLE_PROJECT_REPONAME 
+    - docker run -d -p 8080:8080 --env dist=$CIRCLE_ARTIFACTS $CIRCLE_PROJECT_REPONAME 
 
 test:
   pre:
@@ -26,4 +26,4 @@ deployment:
   main:
     branch: master
     commands:
-      - ./deploy.sh
+      - ./deploy.sh  $CIRCLE_ARTIFACTS/gopkg
