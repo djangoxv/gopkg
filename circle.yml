@@ -19,7 +19,7 @@ test:
     - chmod +x do-package-tree_linux
 
   post:
-    - $CIRCLE_ARTIFACTS/do-package-tree_linux
+    - ./do-package-tree_linux
     - docker stop $(docker ps -a -q)
     - mv ./gopkg $CIRCLE_ARTIFACTS/
 
