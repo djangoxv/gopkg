@@ -7,6 +7,11 @@ type Package struct {
     PkgDeps   []*Package
 }
 
+// AddDep adds dependencies to a Package
+func (pkg *Package) AddDep(to *Package) {
+    pkg.PkgDeps = append(pkg.PkgDeps, to)
+}
+
 // the PkgIndex is the total collection of Packages
 // a new Package's dependencies must be indexed *before* a new package may be indexed
 type PkgIndex struct {
@@ -21,23 +26,11 @@ func PkgCreate(pkgname string) *Package {
     }
 }
 
-// AddDep adds dependencies to a Package
-func (pkg *Package) AddDep(to *Package) {
-    pkg.PkgDeps = append(pkg.PkgDeps, to)
-}
-
-// The interface used for channel communication
-type PkgIndexer interface {
-    PkgInvoke(*Package, *PkgIndex)    ReturnCode
-    PkgQuery(*Package, *PkgIndex)     ReturnCode
-    PkgRemove(*Package, *PkgIndex)    ReturnCode
-}
-
 // PkgQuery returns boolean for whether the Package shows up
-func PkgQuery(pkg *Package, pkgindex *PkgIndex) ReturnCode {
+func (pkgindex *PkgIndex) PkgQuery(pkgname string) ReturnCode {
     logError.Println("Queried ", pkgname)
     for _, p := range pkgindex.Packages {
-        if p == pkgname {
+        if p.PkgName == pkgname {
             return OK
         }
     }
@@ -45,7 +38,8 @@ func PkgQuery(pkg *Package, pkgindex *PkgIndex) ReturnCode {
 }
 
 // PkgInvoke finds or creates a new package  
-func PkgInvoke(pkg *Package, pkgindex []*Package) *Package {
+func (pkgindex *PkgIndex) PkgInvoke(pkgname string, pkgdeps []string) ReturnCode {
+    var pkg *Package
     if pkgindex.PkgQuery(pkgname) == OK {
         return OK
     }
@@ -103,18 +97,4 @@ func (pkgindex *PkgIndex) PkgRemove(pkgname string) ReturnCode {
     return OK    
 }
 
-// handles the connection timeout and reading buffer
-func PkgIndexer(mq chan) {
 
-    for mq <- quit  {
-        // will listen for message to process (\n)
-        request, err := bufio.NewReader(cx).ReadString('\n')
-        if err != nil {
-            logError.Println(err)
-        }
-
-        responseString <- mq)
-        cx.Write([]byte(responseString + "\n"))
-
-    }
-}

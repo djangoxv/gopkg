@@ -16,11 +16,6 @@ const (
     ERROR = "ERROR"
 )
 
-func PkgEncoder(pkgname string, pkgdeps []string) *Package {
-    pkg := PkgCreate(pkgname, pkkgdeps)
-    return pkg
-}
-
 // parses for a valid string format in received message
 func ParseRequest(msg string, pkgindexer *PkgIndex) ReturnCode {
     // not great performance, distribute information > arduous regex
@@ -29,13 +24,12 @@ func ParseRequest(msg string, pkgindexer *PkgIndex) ReturnCode {
     if valid.MatchString(msg) {
         r := regexp.MustCompile(`\|`).Split(msg, -1)
         action, pkgname, pkgdeps := r[0], r[1], r[2]
-        deplist := regexp.MustCompile(`,`).Split(pkgdeps, -1)
-        pkg := CreatePackage(pkgname, deplist)
         switch {
             case action == "INDEX":
-                return PkgInvoke(pkgname, deplist)
+                deplist := regexp.MustCompile(`,`).Split(pkgdeps, -1) 
+                return pkgindexer.PkgInvoke(pkgname, deplist)
             case action == "QUERY":
-                return PkgQuery(pkgname)
+                return pkgindexer.PkgQuery(pkgname)
             case action == "REMOVE":
                 return pkgindexer.PkgRemove(pkgname)
         }
@@ -44,7 +38,7 @@ func ParseRequest(msg string, pkgindexer *PkgIndex) ReturnCode {
 }
 
 // handles the connection timeout and reading buffer
-func PkgHandler(cx net.Conn, mq chan) {
+func PkgHandler(cx net.Conn, pkgindexer *PkgIndex) {
     cx.SetReadDeadline(time.Now().Add(time.Second * 20)) // 20 second timeout
     defer cx.Close() // close connection on exit
 
@@ -56,7 +50,7 @@ func PkgHandler(cx net.Conn, mq chan) {
             break
         }
 
-        responseString <- mq)
+        responseString := ParseRequest(request, pkgindexer)
         cx.Write([]byte(responseString + "\n"))
 
     }
