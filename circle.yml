@@ -9,8 +9,8 @@ dependencies:
   override:
     - go build github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
 # Dockerfile for latest ubuntu 14.04 take longer
-    - docker build -f Dockerfile.ubuntu -t $CIRCLE_PROJECT_REPONAME .
-#    - docker build -t $CIRCLE_PROJECT_REPONAME .
+#    - docker build -f Dockerfile.ubuntu -t $CIRCLE_PROJECT_REPONAME .
+    - docker build -t $CIRCLE_PROJECT_REPONAME .
 
   post:
     - docker run -d -p 8080:8080 $CIRCLE_PROJECT_REPONAME 
