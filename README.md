@@ -28,4 +28,4 @@
  
 ### Binary Distribution Notes ###
 
-  See https://golang.org/doc/install or gopkg/INSTRUCTIONS.md for further information about building and running from go or docker 
+  See https://golang.org/doc/install or [gopkg/INSTRUCTIONS.md](https://github.com/djangoxv/gopkg/blob/master/INSTRUCTIONS.md) for further information about building and running from go or docker 
