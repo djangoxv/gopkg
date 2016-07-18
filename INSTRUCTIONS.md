@@ -32,7 +32,7 @@ i. Install and setup docker daemon for user
 
 #### become root temporarily to create apt-get source file ####
 *   sudo su -
-*   echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources/list.d/docker.list
+*   echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list
 *   exit 
 
 #### Add apt key for dockerproject apt repository ####
