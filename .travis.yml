@@ -11,4 +11,5 @@ before_install:
   - chmod +x /tmp/do-package-tree_linux
 
 script:
-  - /tmp/do-package-tree_linux 
+  - /tmp/do-package-tree_linux
+  - cat /tmp/gopkg.log
