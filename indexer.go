@@ -44,19 +44,20 @@ func (pkgindex *PkgIndex) PkgInvoke(pkgname string, pkgdeps []string) ReturnCode
         return OK
     }
 
-    if pkg == nil {
-        // create empty package
-        pkg = PkgCreate(pkgname)
-        // add deps to package
-        for _, d := range pkgdeps {
+    // create empty package
+    pkg = PkgCreate(pkgname)
+    // add deps to package
+        
+    for _, d := range pkgdeps {
+        if pkgindex.PkgQuery(d) == OK {
             for _, p := range pkgindex.Packages {
                 if p.PkgName == d {
                     pkg.AddDep(p)
-                } 
+                }
             }
-        }       
-        pkgindex.Packages = append(pkgindex.Packages, pkg)
+        } 
     }
+    pkgindex.Packages = append(pkgindex.Packages, pkg)
     logError.Println("Indexed, ", pkgname)
     return OK
 }
