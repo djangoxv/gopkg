@@ -5,13 +5,10 @@ language: go
 go: 1.6.2
 
 before_install:
-  - mkdir go
-  - export GOPATH=./go
-  - go get github.com/djangoxv/gopkg
   - go install github.com/djangoxv/gopkg
-  - go/bin/gopkg &
+  - $HOME/gopath/bin/gopkg &
   - curl http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux -o /tmp/do-package-tree_linux -s
   - chmod +x /tmp/do-package-tree_linux
 
 script:
-  - /tmp/do-package-tree_linux |& tee $CIRCLE_TEST_REPORTS/gopkg_test.out
+  - /tmp/do-package-tree_linux 
