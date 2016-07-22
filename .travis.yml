@@ -10,7 +10,7 @@ go:
 
 before_install:
   - go build github.com/djangoxv/gopkg
-  - docker build gopkg .
+  - docker build -t gopkg .
   - docker run -d -p 8080:8080 gopkg
   - curl http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux -o /tmp/do-package-tree_linux -s
   - chmod +x /tmp/do-package-tree_linux
