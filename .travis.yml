@@ -1,11 +1,15 @@
 sudo: required
 
-services:
-  - docker
+language: go
+
+go: 1.6.2
 
 before_install:
-  - docker build -f Dockerfile.ubuntu -t gopkg .
-  - docker run -d -p 8080:8080 gopkg
+  - mkdir go
+  - export GOPATH=./go
+  - go get github.com/djangoxv/gopkg
+  - go install github.com/djangoxv/gopkg
+  - go/bin/gopkg &
   - curl http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux -o /tmp/do-package-tree_linux -s
   - chmod +x /tmp/do-package-tree_linux
 
