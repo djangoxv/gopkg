@@ -17,4 +17,3 @@ before_install:
 
 script:
   - /tmp/do-package-tree_linux
-  - cat /tmp/gopkg.log
