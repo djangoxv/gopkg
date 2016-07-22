@@ -4,7 +4,7 @@ services:
   - docker
 
 before_install:
-  - docker build -f Dockerfile -t gopkg .
+  - docker build -f Dockerfile.ubuntu -t gopkg .
   - docker run -d -p 8080:8080 
   - curl http://52.40.15.68/artifactory/gopkg/test/do-package-tree_linux -o /tmp/do-package-tree_linux -s
   - chmod +x /tmp/do-package-tree_linux
